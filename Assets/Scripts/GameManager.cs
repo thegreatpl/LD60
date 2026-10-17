@@ -8,6 +8,11 @@ public class GameManager : MonoBehaviour
 
     public Camera Camera; 
 
+
+    public PrefabManager PrefabManager;
+
+    public TerrainGeneration TerrainGeneration;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -17,7 +22,11 @@ public class GameManager : MonoBehaviour
             return; 
         }
         Instance = this;
+        PrefabManager = GetComponent<PrefabManager>();
+        TerrainGeneration = GetComponent<TerrainGeneration>();
 
+
+        TerrainGeneration.GenerateChunk(0, 0); 
 
     }
 
