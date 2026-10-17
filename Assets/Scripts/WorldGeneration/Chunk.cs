@@ -114,17 +114,18 @@ public class Chunk : MonoBehaviour
         yield return null;
 
         var tiles = vault.GetComponentsInChildren<WalkableTile>();
-
+        var cliffs = new List<Vector2>(); 
         foreach (var tile in tiles)
         {
             var pos = transform.InverseTransformPoint(tile.transform.position);
             ReservedPositions.Add(pos);
             ReservedTiles.Add(new Vector2(pos.x / 2, pos.z / 2));
             ReservedHeights.Add(new Vector2((pos.x/2) + (ChunkPos.x * ChunkWidth), (pos.z/2) + (ChunkPos.y * ChunkLength)), (int)tile.transform.position.y);
-
+            if (tile.NeedsCliffs)
+                cliffs.Add(new Vector2(pos.x / 2, pos.z / 2));
         }
 
-        foreach (var tile in ReservedTiles)
+        foreach (var tile in cliffs)
         {
             //need to fix this. Current generates cliffs where there are already walls. 
             GenerateCliffs((int)tile.x, (int)tile.y, ChunkPos.x, ChunkPos.y, gameObject);
