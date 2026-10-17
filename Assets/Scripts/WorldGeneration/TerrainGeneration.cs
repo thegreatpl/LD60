@@ -1,5 +1,7 @@
+using KaimiraGames;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor.U2D.Aseprite;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -45,10 +47,20 @@ public class TerrainGeneration : MonoBehaviour
     public GameObject VaultPrefab; 
 
 
+    public List<TerrainPrefabDef> TerrainPrefabs = new List<TerrainPrefabDef>();
+
+    public WeightedList<TerrainPrefabDef> WeightedTerrainPrefabs = new WeightedList<TerrainPrefabDef>();
+
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        StartCoroutine(ChunkManager()); 
+        foreach(var terrain in TerrainPrefabs)
+        {
+            WeightedTerrainPrefabs.Add(terrain, terrain.Weight); 
+        }
+
+       // StartCoroutine(ChunkManager()); 
     }
 
     // Update is called once per frame
@@ -64,7 +76,7 @@ public class TerrainGeneration : MonoBehaviour
 
         //Do an initial load here? 
         var playerchunk2 = GetChunkFromLocation(GameManager.Instance.Player.transform.position);
-        yield return StartCoroutine(GenerateChunk(playerchunk2.x, playerchunk2.y));
+        //yield return StartCoroutine(GenerateChunk(playerchunk2.x, playerchunk2.y));
         for (int xdx = playerchunk2.x - 1; xdx <= playerchunk2.x + 1; xdx++)
         {
             for (int ydx = playerchunk2.y - 1; ydx <= playerchunk2.y + 1; ydx++)
@@ -102,7 +114,7 @@ public class TerrainGeneration : MonoBehaviour
 
 
 
-    public IEnumerator GenerateChunk(int chunkx, int chunkz)
+    public IEnumerator GenerateChunk(int chunkx, int chunkz, string feature = "")
     {
         var chunkobj = GameObject.Instantiate(Chunk).GetComponent<Chunk>();
         var chunkLox = chunkx * (ChunkWidth * 2);
@@ -111,6 +123,7 @@ public class TerrainGeneration : MonoBehaviour
         chunkobj.transform.position = new Vector3(chunkLox, 0, chunkLoz);
         chunkobj.TerrainGeneration = this; 
         chunkobj.ChunkPos = new Vector2Int(chunkx, chunkz);
+        chunkobj.Feature = feature; 
         LoadedChunks.Add(chunkobj.ChunkPos, chunkobj);
         yield return null;
         yield return StartCoroutine(chunkobj.GenerateChunk()); 
@@ -179,5 +192,15 @@ public class TerrainGeneration : MonoBehaviour
         return new Vector2Int((int)chunkx, (int)chunkz);
     }
 
+
+    public GameObject GetRandomFeature(System.Random chunkRandom)
+    {
+        return WeightedTerrainPrefabs.Next(chunkRandom).Prefab;
+    }
+
+    public GameObject GetFeature(string  name)
+    {
+        return TerrainPrefabs.FirstOrDefault(x => x.Name == name)?.Prefab;
+    }
 
 }

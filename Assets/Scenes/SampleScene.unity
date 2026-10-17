@@ -317,18 +317,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameManager
       objectReference: {fileID: 0}
-    - target: {fileID: 3844817058380870525, guid: 5d344e19c1e75b144a76e48811664d65, type: 3}
-      propertyPath: XOffset
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 3844817058380870525, guid: 5d344e19c1e75b144a76e48811664d65, type: 3}
-      propertyPath: YOffset
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 3844817058380870525, guid: 5d344e19c1e75b144a76e48811664d65, type: 3}
-      propertyPath: VaultPrefab
-      value: 
-      objectReference: {fileID: 1534492104221027227, guid: 5bb9e9c503e486d4c84ebd281b171dd8, type: 3}
     - target: {fileID: 4435725082911789859, guid: 5d344e19c1e75b144a76e48811664d65, type: 3}
       propertyPath: Camera
       value: 

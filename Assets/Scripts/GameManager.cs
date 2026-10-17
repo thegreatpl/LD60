@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -29,7 +30,7 @@ public class GameManager : MonoBehaviour
         TerrainGeneration = GetComponent<TerrainGeneration>();
 
 
-        
+        StartNewGame();
 
     }
 
@@ -44,4 +45,26 @@ public class GameManager : MonoBehaviour
     {
         return Camera;
     }
+
+    public void StartNewGame()
+    {
+        StartCoroutine(StartNewGameCo()); 
+    }
+
+
+    public IEnumerator StartNewGameCo()
+    {
+        yield return null;
+
+        //spawn in player here. 
+
+        yield return TerrainGeneration.GenerateChunk(0, 0, "Vault");
+
+        StartCoroutine(TerrainGeneration.ChunkManager()); 
+
+        yield return null;
+
+
+    }
+
 }

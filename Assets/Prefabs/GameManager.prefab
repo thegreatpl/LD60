@@ -49,6 +49,7 @@ MonoBehaviour:
   Camera: {fileID: 0}
   PrefabManager: {fileID: 0}
   TerrainGeneration: {fileID: 0}
+  Player: {fileID: 0}
 --- !u!114 &6625596866396264043
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -85,6 +86,13 @@ MonoBehaviour:
   Scale: 1
   ChunkWidth: 50
   ChunkLength: 50
-  XOffset: 0
-  YOffset: 0
+  XOffset: 5
+  YOffset: 6
   Tree: {fileID: 446978059865261455, guid: 6357d3a0314517f429550d86532e64ae, type: 3}
+  LoadDistance: 2
+  ChunkLoadSpeed: 50
+  VaultPrefab: {fileID: 1534492104221027227, guid: 5bb9e9c503e486d4c84ebd281b171dd8, type: 3}
+  TerrainPrefabs:
+  - Name: Vault
+    Prefab: {fileID: 1534492104221027227, guid: 5bb9e9c503e486d4c84ebd281b171dd8, type: 3}
+    Weight: 1

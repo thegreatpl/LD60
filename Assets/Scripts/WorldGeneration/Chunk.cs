@@ -23,6 +23,8 @@ public class Chunk : MonoBehaviour
 
     Dictionary<Vector2, int> ReservedHeights = new Dictionary<Vector2, int>();
 
+    public string Feature; 
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -97,9 +99,14 @@ public class Chunk : MonoBehaviour
 
     public IEnumerator GenerateFeatures()
     {
-        var vault = Instantiate(TerrainGeneration.VaultPrefab, transform).GetComponent<TerrainPrefab>();
-        int vposx = 20;//LocalRandom.Next(10, ChunkWidth -10);
-        int vposz = 20;//LocalRandom.Next(10, ChunkLength-10);
+        if (!string.IsNullOrWhiteSpace(Feature) && LocalRandom.NextDouble() < 0.6f)
+            yield break;
+
+        var featurePrefab = string.IsNullOrWhiteSpace(Feature) ? TerrainGeneration.GetRandomFeature(LocalRandom) : TerrainGeneration.GetFeature(Feature); 
+
+        var vault = Instantiate(featurePrefab, transform).GetComponent<TerrainPrefab>();
+        int vposx = LocalRandom.Next(10, ChunkWidth -10);
+        int vposz = LocalRandom.Next(10, ChunkLength-10);
 
 
         vault.AdjustLocationToEntrance(new Vector3(vposx * 2, TerrainGeneration.GetHeight(vposx + (ChunkPos.x * ChunkWidth), vposz + (ChunkPos.y * ChunkLength)), vposz * 2));
@@ -133,6 +140,9 @@ public class Chunk : MonoBehaviour
             var tree = Instantiate(TerrainGeneration.Tree, gameObject.transform);
             int x = LocalRandom.Next(0, ChunkWidth);
             int y = LocalRandom.Next(0, ChunkLength);
+
+            if (ReservedTiles.Contains(new Vector2(x, y)))
+                continue; 
 
 
             var actX = x + (ChunkPos.x * ChunkWidth);
