@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2501131283902925056}
   - component: {fileID: 3009132037604279943}
   - component: {fileID: 3130748484137371087}
+  - component: {fileID: 3638130032819781173}
   m_Layer: 3
   m_Name: dirtGround
   m_TagString: Untagged
@@ -114,3 +115,15 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2, y: 2.0000005, z: 0.20000005}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &3638130032819781173
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4758984189117553910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73483af999fa0a04185ffc2a4bb955a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WalkableTile

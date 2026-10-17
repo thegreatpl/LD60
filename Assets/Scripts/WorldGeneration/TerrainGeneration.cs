@@ -38,7 +38,11 @@ public class TerrainGeneration : MonoBehaviour
     Dictionary<Vector2Int, Chunk> LoadedChunks = new Dictionary<Vector2Int, Chunk>();
 
 
-    public int ChunkLoadSpeed = 50; 
+    public int ChunkLoadSpeed = 50;
+
+
+
+    public GameObject VaultPrefab; 
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
