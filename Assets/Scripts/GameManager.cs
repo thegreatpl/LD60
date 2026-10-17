@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviour
         TerrainGeneration = GetComponent<TerrainGeneration>();
 
 
-        TerrainGeneration.GenerateChunk(0, 0); 
+        
 
     }
 
