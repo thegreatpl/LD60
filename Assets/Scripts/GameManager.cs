@@ -5,6 +5,9 @@ public class GameManager : MonoBehaviour
 
     public static GameManager Instance;
 
+
+    public Camera Camera; 
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -27,6 +30,6 @@ public class GameManager : MonoBehaviour
 
     public Camera GetCurrentCamera()
     {
-        return Camera.main;
+        return Camera;
     }
 }
