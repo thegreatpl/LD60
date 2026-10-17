@@ -83,3 +83,8 @@ MonoBehaviour:
   Cliff: {fileID: 4232478404172556537, guid: 3fa07ff1ca42ff0468042157439f9f44, type: 3}
   CliffZ: {fileID: 8382387562102339224, guid: 0070acdd6791e0445b7ea4a479d400be, type: 3}
   Scale: 1
+  ChunkWidth: 50
+  ChunkLength: 50
+  XOffset: 0
+  YOffset: 0
+  Tree: {fileID: 446978059865261455, guid: 6357d3a0314517f429550d86532e64ae, type: 3}

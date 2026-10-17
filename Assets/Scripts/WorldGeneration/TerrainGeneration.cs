@@ -1,4 +1,6 @@
 using System.Collections;
+using System.Collections.Generic;
+using UnityEditor.U2D.Aseprite;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -27,6 +29,17 @@ public class TerrainGeneration : MonoBehaviour
     public float XOffset = 0; 
     public float YOffset = 0;
 
+    public GameObject Tree;
+
+
+    public int LoadDistance = 2; 
+
+
+    Dictionary<Vector2Int, Chunk> LoadedChunks = new Dictionary<Vector2Int, Chunk>();
+
+
+    public int ChunkLoadSpeed = 50; 
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -43,15 +56,44 @@ public class TerrainGeneration : MonoBehaviour
 
     public IEnumerator ChunkManager()
     {
-        for (int xdx = -2; xdx < 2; xdx++)
+        yield return null;
+
+        //Do an initial load here? 
+        var playerchunk2 = GetChunkFromLocation(GameManager.Instance.Player.transform.position);
+        yield return StartCoroutine(GenerateChunk(playerchunk2.x, playerchunk2.y));
+        for (int xdx = playerchunk2.x - 1; xdx <= playerchunk2.x + 1; xdx++)
         {
-            for (int ydx = -2; ydx < 2; ydx++)
+            for (int ydx = playerchunk2.y - 1; ydx <= playerchunk2.y + 1; ydx++)
             {
-                yield return GenerateChunk(xdx, ydx);
+                if (!LoadedChunks.ContainsKey(new Vector2Int(xdx, ydx)))
+                    yield return StartCoroutine(GenerateChunk(xdx, ydx));
             }
         }
+        yield return null;
 
-        yield return null; 
+        while (true) //TODO: figure out how to stop this on game end. 
+        {
+            if (GameManager.Instance?.Player == null)
+            {
+                yield return null;
+                continue; //Break here maybe?
+            }
+            //this needs tweaking. 
+            var playerchunk = GetChunkFromLocation(GameManager.Instance.Player.transform.position); 
+            for (int xdx = playerchunk.x -LoadDistance; xdx <= playerchunk.x + LoadDistance; xdx++)
+            {
+                for (int ydx = playerchunk.y -LoadDistance; ydx  <= playerchunk.y + LoadDistance; ydx++)
+                {
+                    if (!LoadedChunks.ContainsKey(new Vector2Int(xdx, ydx)))
+                        yield return StartCoroutine(GenerateChunk(xdx, ydx)); 
+                }
+            }
+
+            //Cull chunks too far from the player here. 
+
+            yield return null;
+        }
+
     }
 
 
@@ -65,6 +107,7 @@ public class TerrainGeneration : MonoBehaviour
         chunkobj.transform.position = new Vector3(chunkLox, 0, chunkLoz);
         chunkobj.TerrainGeneration = this; 
         chunkobj.ChunkPos = new Vector2Int(chunkx, chunkz);
+        LoadedChunks.Add(chunkobj.ChunkPos, chunkobj);
         yield return null;
         yield return StartCoroutine(chunkobj.GenerateChunk()); 
 
@@ -123,6 +166,14 @@ public class TerrainGeneration : MonoBehaviour
 
     }
 
+
+    public Vector2Int GetChunkFromLocation(Vector3 location)
+    {
+        var chunkx = location.x / (ChunkWidth * 2);
+        var chunkz = location.z / (ChunkLength * 2); 
+
+        return new Vector2Int((int)chunkx, (int)chunkz);
+    }
 
 
 }
