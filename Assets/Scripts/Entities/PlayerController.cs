@@ -43,7 +43,7 @@ public class PlayerController : MonoBehaviour
         MovementController.Movement = movement;
 
 
-        MovementController.Jump = Jump.IsPressed();
+       // MovementController.Jump = Jump.IsPressed();
 
         if (Fire.IsPressed())
         {
