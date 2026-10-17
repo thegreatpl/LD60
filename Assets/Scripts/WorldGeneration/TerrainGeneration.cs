@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -23,16 +24,14 @@ public class TerrainGeneration : MonoBehaviour
     public int ChunkLength = 50;
 
 
+    public float XOffset = 0; 
+    public float YOffset = 0;
+
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        for (int xdx = 0; xdx < 3; xdx++)
-        {
-            for (int ydx = 0; ydx < 3; ydx++)
-            {
-                GenerateChunk(xdx, ydx);
-            }
-        }
+        StartCoroutine(ChunkManager()); 
     }
 
     // Update is called once per frame
@@ -42,44 +41,34 @@ public class TerrainGeneration : MonoBehaviour
     }
 
 
-    public void GenerateChunk(int chunkx, int chunkz)
+    public IEnumerator ChunkManager()
     {
-        var chunkobj = GameObject.Instantiate(Chunk);
+        for (int xdx = -2; xdx < 2; xdx++)
+        {
+            for (int ydx = -2; ydx < 2; ydx++)
+            {
+                yield return GenerateChunk(xdx, ydx);
+            }
+        }
+
+        yield return null; 
+    }
+
+
+
+    public IEnumerator GenerateChunk(int chunkx, int chunkz)
+    {
+        var chunkobj = GameObject.Instantiate(Chunk).GetComponent<Chunk>();
         var chunkLox = chunkx * (ChunkWidth * 2);
         var chunkLoz = chunkz * (ChunkLength * 2);
 
         chunkobj.transform.position = new Vector3(chunkLox, 0, chunkLoz);
+        chunkobj.TerrainGeneration = this; 
+        chunkobj.ChunkPos = new Vector2Int(chunkx, chunkz);
+        yield return null;
+        yield return StartCoroutine(chunkobj.GenerateChunk()); 
 
-        for (int xdx = 0; xdx < 50; xdx++)
-        {
-            for (int ydx = 0; ydx < 50; ydx++)
-            {
-                var actX = xdx + (chunkx * ChunkWidth);
-                var actZ = ydx + (chunkz * ChunkLength);
-
-                var thisheight = GetHeight(actX,actZ);   
-                GameObject type = BaseTerrain;
-
-                //if (GetHeight(xdx - 1, ydx) == thisheight + 1)
-                //    type = SlopeX;
-                //if (GetHeight(xdx +1, ydx) == thisheight +1)
-                //    type = SlopePosX;
-                //if (GetHeight(xdx, ydx -1) == thisheight +1)
-                //    type = SlopeZ;
-                //if (GetHeight(xdx, ydx + 1) == thisheight +1)
-                //    type = SlopePosZ;
-
-
-                var tile = GameObject.Instantiate(type, chunkobj.transform);
-                tile.transform.localPosition = new Vector3(xdx * 2, thisheight + type.transform.position.y, ydx * 2);
-
-                GenerateCliffs(xdx, ydx, chunkx, chunkz, chunkobj);
-
-
-            }
-        }
-
-
+        yield return null;
     }
 
 
@@ -88,8 +77,8 @@ public class TerrainGeneration : MonoBehaviour
         int width = 50;
         int height = 50; 
 
-        float xCoord = (float)tilex / ChunkWidth * Scale;// + offsetX;
-        float yCoord = (float)tiley / ChunkLength * Scale;// + offsetY;
+        float xCoord = (float)tilex / ChunkWidth * Scale + XOffset;
+        float yCoord = (float)tiley / ChunkLength * Scale + YOffset;
 
         var result = Mathf.PerlinNoise(xCoord, yCoord);
         Debug.Log(result);
